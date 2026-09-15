@@ -18,6 +18,7 @@ import Kourovka.PathExpansion
 import Kourovka.MixedPaths
 import Kourovka.CenterQuotients
 import Kourovka.EventualCentrality
+import Kourovka.QuotientProducts
 import Kourovka.CentralLattice
 import Kourovka.CentralPeriod
 import Kourovka.DiagonalCongruence

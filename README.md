@@ -77,15 +77,24 @@ commute pairwise and generate $G$. Moreover, $P_v=P_{v0}P_{v1}$ with commuting
 children. These identities are proved in [Paths.lean](Kourovka/Paths.lean)
 and [PathExpansion.lean](Kourovka/PathExpansion.lean).
 
-For finitely generated soluble factors, the weight bound implies that only
-finitely many infinite binary paths have nonabelian images at every level.
-The shift on this finite set has an idempotent positive iterate.
-`ProductPaths.finitePath_middle_eq_terminal` in
-[PathExtension.lean](Kourovka/PathExtension.lean) consequently gives a positive integer
-$m$ such that every word $v$ of length greater than $2m$ with nonabelian
-$P_v$ has $v_m=v_{2m}$, using zero-based indices.
+For finitely generated soluble factors, at most $W=w(G)$ infinite binary
+paths have nonabelian images at every level. On any finite set of at most
+$W$ elements, every endomorphism $s$ satisfies $s^{2W!}=s^{W!}$.
+`FinitePaths.factorial_iterate_idempotent` in
+[FinitePaths.lean](Kourovka/FinitePaths.lean) proves this explicit bound.
+Applying it to the shift gives one exponent
 
-`ProductPaths.mixed_iterate_central` in
+```math
+m=W!,\qquad W=w(A\times B),\qquad 0!=1,
+```
+
+for every surjective endomorphism of the fixed product.
+`ProductPaths.finitePath_factorial_middle_eq_terminal` in
+[PathExtension.lean](Kourovka/PathExtension.lean) proves that every word
+$v$ of length greater than $2m$ with nonabelian $P_v$ has $v_m=v_{2m}$,
+using zero-based indices.
+
+`ProductPaths.factorial_mixed_iterate_central` in
 [MixedPaths.lean](Kourovka/MixedPaths.lean) applies this constraint to obtain
 
 ```math
@@ -102,9 +111,9 @@ soluble group is trivial.
 
 [EventualCentrality.lean](Kourovka/EventualCentrality.lean) applies this
 retract argument modulo the centre. The resulting declaration
-`exists_central_offDiagonal_iterate` states that every surjective
-endomorphism $f$ of a product of finitely generated soluble groups has
-some positive power $F=f^m$ satisfying
+`central_offDiagonal_factorial_iterate` states that, for every surjective
+endomorphism $f$ of a product of finitely generated soluble groups,
+$F=f^m$ with the fixed exponent $m=w(A\times B)!$ satisfies
 
 ```math
 F_{12}(B)\le Z(A),\qquad F_{21}(A)\le Z(B).
@@ -113,6 +122,19 @@ F_{12}(B)\le Z(A),\qquad F_{21}(A)\le Z(B).
 Here $F_{12}(b)$ is the first coordinate of $F(1,b)$, and $F_{21}(a)$ is
 the second coordinate of $F(a,1)$. **This result does not assume that either
 factor is Hopfian.**
+
+Under the natural identification
+
+```math
+(A\times B)/Z(A\times B)\cong A/Z(A)\times B/Z(B),
+```
+
+the endomorphism induced by $f^{w(A\times B)!}$ is a product of surjective
+endomorphisms of $A/Z(A)$ and $B/Z(B)$.
+`central_offDiagonal_iff_quotient_product` in
+[QuotientProducts.lean](Kourovka/QuotientProducts.lean) proves the equivalence
+with central off-diagonal images, and `factorial_quotient_product` applies
+it to the uniform exponent.
 
 ## Integral lifts and central corrections
 

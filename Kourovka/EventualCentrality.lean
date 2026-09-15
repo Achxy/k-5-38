@@ -79,15 +79,16 @@ theorem second_offDiagonal_central_of_killed [Group.FG A] [Group.FG B] [IsSolvab
     exact (Subgroup.centerCongr e ⟨f (1, (f (a, 1)).2), hk a⟩).property
   exact first_offDiagonal_central_of_killed g hg hkg
 
-/-- A surjective endomorphism of a product of finitely generated soluble groups has
-    a positive iterate whose off-diagonal components are central. -/
-theorem exists_central_offDiagonal_iterate [Group.FG A] [Group.FG B]
+/-- The factorial of the product's weight centralizes the off-diagonal components
+    of every surjective endomorphism of that product. -/
+theorem central_offDiagonal_factorial_iterate [Group.FG A] [Group.FG B]
     [IsSolvable A] [IsSolvable B] (f : A × B →* A × B)
     (hf : Function.Surjective f) :
-    ∃ m : ℕ, 0 < m ∧
-      (∀ b : B, (ProductPaths.iterateHom f m (1, b)).1 ∈ Subgroup.center A) ∧
+    let m := (CenterWeight.weight (A × B)).factorial
+    (∀ b : B, (ProductPaths.iterateHom f m (1, b)).1 ∈ Subgroup.center A) ∧
       (∀ a : A, (ProductPaths.iterateHom f m (a, 1)).2 ∈ Subgroup.center B) := by
-  obtain ⟨m, hm, hmix⟩ := ProductPaths.mixed_iterate_central f hf
+  let m := (CenterWeight.weight (A × B)).factorial
+  have hmix := ProductPaths.factorial_mixed_iterate_central f hf
   let F := ProductPaths.iterateHom f m
   have hF : Function.Surjective F := ProductPaths.iterateHom_surjective f hf m
   have hk1 : ∀ b : B, F ((F (1, b)).1, 1) ∈ Subgroup.center (A × B) := by
@@ -96,7 +97,18 @@ theorem exists_central_offDiagonal_iterate [Group.FG A] [Group.FG B]
   have hk2 : ∀ a : A, F (1, (F (a, 1)).2) ∈ Subgroup.center (A × B) := by
     intro a
     exact hmix true false (by decide) (a, 1)
-  exact ⟨m, hm, first_offDiagonal_central_of_killed F hF hk1,
+  exact ⟨first_offDiagonal_central_of_killed F hF hk1,
     second_offDiagonal_central_of_killed F hF hk2⟩
+
+/-- A surjective endomorphism of a product of finitely generated soluble groups has
+    a positive iterate whose off-diagonal components are central. -/
+theorem exists_central_offDiagonal_iterate [Group.FG A] [Group.FG B]
+    [IsSolvable A] [IsSolvable B] (f : A × B →* A × B)
+    (hf : Function.Surjective f) :
+    ∃ m : ℕ, 0 < m ∧
+      (∀ b : B, (ProductPaths.iterateHom f m (1, b)).1 ∈ Subgroup.center A) ∧
+      (∀ a : A, (ProductPaths.iterateHom f m (a, 1)).2 ∈ Subgroup.center B) :=
+  ⟨(CenterWeight.weight (A × B)).factorial, Nat.factorial_pos _,
+    central_offDiagonal_factorial_iterate f hf⟩
 
 end Kourovka

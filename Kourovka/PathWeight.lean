@@ -55,6 +55,12 @@ noncomputable def branchEquiv (f : A × B →* A × B) (hf : Function.Surjective
 noncomputable def pathWeight (f : A × B →* A × B) (w : List Bool) : ℕ :=
   CenterWeight.weight (path f w).range
 
+/-- The root budget is an invariant of the product, independent of the endomorphism. -/
+theorem pathWeight_nil (f : A × B →* A × B) :
+    pathWeight f [] = CenterWeight.weight (A × B) :=
+  (CenterWeight.weight_congr
+    (MonoidHom.ofInjective (f := MonoidHom.id (A × B)) Function.injective_id)).symm
+
 /-- The finite budget splits between the two children of every path. -/
 theorem children_weight_le [Group.FG A] [Group.FG B]
     (f : A × B →* A × B) (hf : Function.Surjective f) (w : List Bool) :

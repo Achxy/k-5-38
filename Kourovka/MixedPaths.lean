@@ -49,14 +49,18 @@ theorem mixed_term_central (f : A × B →* A × B) (hf : Function.Surjective f)
         simpa only [path_append, MonoidHom.comp_apply, path_cons, path_nil] using hc
       · simpa only [map_one] using (Subgroup.center (A × B)).one_mem
 
-/-- A common iterate kills each mixed off-diagonal composite modulo the center. -/
-theorem mixed_iterate_central [Group.FG A] [Group.FG B]
+/-- The uniform factorial iterate kills every mixed composite modulo the center. -/
+theorem factorial_mixed_iterate_central [Group.FG A] [Group.FG B]
     [IsSolvable A] [IsSolvable B] (f : A × B →* A × B)
     (hf : Function.Surjective f) :
-    ∃ m : ℕ, 0 < m ∧ ∀ (j k : Bool), j ≠ k → ∀ x : A × B,
+    let m := (CenterWeight.weight (A × B)).factorial
+    ∀ (j k : Bool), j ≠ k → ∀ x : A × B,
       f^[m] (axis j (f^[m] (axis k x))) ∈ Subgroup.center (A × B) := by
-  obtain ⟨m, hm, hp⟩ := finitePath_middle_eq_terminal f hf
-  refine ⟨m, hm, ?_⟩
+  let m := (CenterWeight.weight (A × B)).factorial
+  have hm : 0 < m := Nat.factorial_pos _
+  have hp := finitePath_factorial_middle_eq_terminal f hf
+  change ∀ (j k : Bool), j ≠ k → ∀ x : A × B,
+    f^[m] (axis j (f^[m] (axis k x))) ∈ Subgroup.center (A × B)
   intro j k hjk x
   let g : A × B →* A × B := (iterateHom f m).comp (axis j)
   change g (f^[m] (axis k x)) ∈ _
@@ -72,6 +76,15 @@ theorem mixed_iterate_central [Group.FG A] [Group.FG B]
   obtain ⟨u, hu, rfl⟩ := List.mem_map.mp ht
   exact mixed_term_central f hf m hm hp u v (allWords_length _ _ hu)
     (allWords_length _ _ hv) j k hjk x
+
+/-- A common iterate kills each mixed off-diagonal composite modulo the center. -/
+theorem mixed_iterate_central [Group.FG A] [Group.FG B]
+    [IsSolvable A] [IsSolvable B] (f : A × B →* A × B)
+    (hf : Function.Surjective f) :
+    ∃ m : ℕ, 0 < m ∧ ∀ (j k : Bool), j ≠ k → ∀ x : A × B,
+      f^[m] (axis j (f^[m] (axis k x))) ∈ Subgroup.center (A × B) :=
+  ⟨(CenterWeight.weight (A × B)).factorial, Nat.factorial_pos _,
+    factorial_mixed_iterate_central f hf⟩
 
 end ProductPaths
 end Kourovka

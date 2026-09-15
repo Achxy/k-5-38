@@ -101,22 +101,33 @@ theorem exists_livePath_extension (f : A × B →* A × B) (hf : Function.Surjec
     have hp : w <+: extensionWord f w w.length := extensionWord_prefix f w (Nat.zero_le _)
     exact (List.prefix_iff_eq_take.mp hp).symm
 
-/-- The common shift identity applies to every sufficiently long finite nonabelian path. -/
-theorem finitePath_middle_eq_terminal [Group.FG A] [Group.FG B]
+/-- The uniform factorial shift identity holds on all sufficiently long nonabelian paths. -/
+theorem finitePath_factorial_middle_eq_terminal [Group.FG A] [Group.FG B]
     [IsSolvable A] [IsSolvable B] (f : A × B →* A × B)
     (hf : Function.Surjective f) :
-    ∃ m : ℕ, 0 < m ∧ ∀ (w : List Bool) (hw : 2 * m < w.length), Nonabelian f w →
+    let m := (CenterWeight.weight (A × B)).factorial
+    ∀ (w : List Bool) (hw : 2 * m < w.length), Nonabelian f w →
       w[m]'(by omega) = w[2 * m]'hw := by
-  obtain ⟨m, hm, hperiod⟩ := livePaths_middle_eq_terminal f hf
-  refine ⟨m, hm, ?_⟩
+  let m := (CenterWeight.weight (A × B)).factorial
+  change ∀ (w : List Bool) (hw : 2 * m < w.length), Nonabelian f w →
+    w[m]'(by omega) = w[2 * m]'hw
   intro w hw hn
   obtain ⟨x, hx, hwx⟩ := exists_livePath_extension f hf w hn
-  have hp := hperiod x hx
+  have hp := livePaths_factorial_middle_eq_terminal f hf x hx
   have hget (i : ℕ) (hi : i < w.length) : w[i] = x i := by
     have hpref : w <+: initialWord w.length x := by rw [hwx]
     simpa only [initialWord, List.getElem_ofFn, FinitePaths.initialSegment] using hpref.getElem hi
   rw [hget m (by omega), hget (2 * m) hw]
   exact hp
+
+/-- The common shift identity applies to every sufficiently long finite nonabelian path. -/
+theorem finitePath_middle_eq_terminal [Group.FG A] [Group.FG B]
+    [IsSolvable A] [IsSolvable B] (f : A × B →* A × B)
+    (hf : Function.Surjective f) :
+    ∃ m : ℕ, 0 < m ∧ ∀ (w : List Bool) (hw : 2 * m < w.length), Nonabelian f w →
+      w[m]'(by omega) = w[2 * m]'hw :=
+  ⟨(CenterWeight.weight (A × B)).factorial, Nat.factorial_pos _,
+    finitePath_factorial_middle_eq_terminal f hf⟩
 
 end ProductPaths
 end Kourovka

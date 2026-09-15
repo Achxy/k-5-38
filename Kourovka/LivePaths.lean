@@ -120,12 +120,25 @@ theorem livePaths_shift (f : A × B →* A × B) (x : ℕ → Bool) (hx : x ∈ 
   rw [initialWord_succ] at h
   exact nonabelian_suffix f [x 0] (initialWord n (FinitePaths.shift x)) h
 
+/-- The factorial of the product's weight works for every live path and every epimorphism. -/
+theorem livePaths_factorial_middle_eq_terminal [Group.FG A] [Group.FG B]
+    [IsSolvable A] [IsSolvable B] (f : A × B →* A × B)
+    (hf : Function.Surjective f) :
+    ∀ x ∈ livePaths f,
+      x (CenterWeight.weight (A × B)).factorial =
+        x (2 * (CenterWeight.weight (A × B)).factorial) :=
+  FinitePaths.factorial_middle_eq_terminal_of_bounded_prefixes
+    (livePaths f) (CenterWeight.weight (A × B))
+    (fun n => by simpa only [pathWeight_nil] using livePaths_prefix_bound f hf n)
+    (livePaths_shift f)
+
 /-- One common power of the shift agrees with its square on every live path. -/
 theorem livePaths_middle_eq_terminal [Group.FG A] [Group.FG B]
     [IsSolvable A] [IsSolvable B] (f : A × B →* A × B)
     (hf : Function.Surjective f) :
     ∃ m : ℕ, 0 < m ∧ ∀ x ∈ livePaths f, x m = x (2 * m) :=
-  FinitePaths.middle_eq_terminal (livePaths f) (livePaths_finite f hf) (livePaths_shift f)
+  ⟨(CenterWeight.weight (A × B)).factorial, Nat.factorial_pos _,
+    livePaths_factorial_middle_eq_terminal f hf⟩
 
 end ProductPaths
 end Kourovka

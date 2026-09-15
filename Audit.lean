@@ -21,11 +21,16 @@ run_cmd do
   logInfo m!"Axiom audit passed for {count} project declarations."
 
 #print axioms Kourovka.FinitePaths.middle_eq_terminal_of_bounded_prefixes
+#print axioms Kourovka.FinitePaths.factorial_iterate_idempotent
+#print axioms Kourovka.FinitePaths.factorial_middle_eq_terminal_of_bounded_prefixes
 #print axioms Kourovka.CentralProducts.quotientEquiv
 #print axioms Kourovka.retract_eq_bot_of_le_commutator
 #print axioms Kourovka.injective_of_central_offDiagonal
 
 #print axioms Kourovka.exists_central_offDiagonal_iterate
+#print axioms Kourovka.central_offDiagonal_factorial_iterate
+#print axioms Kourovka.central_offDiagonal_iff_quotient_product
+#print axioms Kourovka.factorial_quotient_product
 
 #print axioms Kourovka.CentralLattice.exists_group_correction_modulus
 #print axioms Kourovka.directProduct_isHopfian

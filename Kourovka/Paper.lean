@@ -3,6 +3,7 @@ Authors: Achyuth Jayadevan <achyuth@jayadevan.in>
 Released under CC0 1.0 Universal; see LICENSE.
 -/
 import Kourovka.CentralHopfian
+import Kourovka.QuotientProducts
 import Kourovka.Problem
 
 namespace Kourovka
